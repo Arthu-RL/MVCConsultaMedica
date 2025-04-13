@@ -55,17 +55,22 @@ namespace TrabalhoMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,CPF,DataNascimento,Telefone")] Paciente paciente)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(paciente);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+
+                return View(paciente);
             }
-            else
-            {
-                Console.WriteLine("Model invalid");
-            }
-            return View(paciente);
+
+            _context.Add(paciente);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Paciente/Edit/5
@@ -94,27 +99,37 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                foreach (var modelState in ModelState.Values)
                 {
-                    _context.Update(paciente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PacienteExists(paciente.Id))
+                    foreach (var error in modelState.Errors)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        Console.WriteLine(error.ErrorMessage);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return View(paciente);
             }
-            return View(paciente);
+
+            try
+            {
+                _context.Update(paciente);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PacienteExists(paciente.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Paciente/Delete/5
@@ -143,7 +158,7 @@ namespace TrabalhoMVC.Controllers
             var paciente = await _context.Pacientes.FindAsync(id);
             if (paciente != null)
             {
-                var consultas = await _context.Consultas.FindAsync(paciente.Id);
+                var consultas = await _context.Consultas.Where(c => c.PacienteId == paciente.Id).FirstOrDefaultAsync();
 
                 if (consultas != null)
                 {

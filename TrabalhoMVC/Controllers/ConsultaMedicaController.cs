@@ -19,6 +19,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var consultas = await (from c in _context.Consultas
@@ -33,6 +34,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,6 +57,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Create
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new ConsultaMedica
@@ -102,6 +105,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -171,6 +175,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -207,6 +212,7 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Agenda
+        [HttpGet]
         public async Task<IActionResult> Agenda(DateTime? data, int? minimoConsultas)
         {
             data = data ?? DateTime.Today;
@@ -238,7 +244,7 @@ namespace TrabalhoMVC.Controllers
                                                    join m in _context.Medicos on c.MedicoId equals m.Id
                                                    where c.DataConsulta.Month == data.Value.Month
                                                       && c.DataConsulta.Year == data.Value.Year
-                                                      && c.Status == StatusConsulta.Realizada
+                                                      && c.Status == StatusConsulta.Realizada || c.Status == StatusConsulta.Cancelada
                                                    group c by new { m.Id, m.Nome, m.Especialidade } into grp
                                                    where grp.Count() >= minimoConsultas
                                                    orderby grp.Count() descending

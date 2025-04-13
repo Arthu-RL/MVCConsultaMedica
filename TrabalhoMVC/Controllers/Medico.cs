@@ -55,13 +55,22 @@ namespace TrabalhoMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,CPF,Telefone,CRM,Especialidade,Ativo")] Medico medico)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(medico);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+
+                return View(medico);
             }
-            return View(medico);
+
+            _context.Add(medico);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Medico/Edit/5
@@ -90,27 +99,37 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                foreach (var modelState in ModelState.Values)
                 {
-                    _context.Update(medico);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MedicoExists(medico.Id))
+                    foreach (var error in modelState.Errors)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        Console.WriteLine(error.ErrorMessage);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return View(medico);
             }
-            return View(medico);
+
+            try
+            {
+                _context.Update(medico);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MedicoExists(medico.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Medico/Delete/5
@@ -139,7 +158,7 @@ namespace TrabalhoMVC.Controllers
             var medico = await _context.Medicos.FindAsync(id);
             if (medico != null)
             {
-                var consultas = await _context.Consultas.FindAsync(medico.Id);
+                var consultas = await _context.Consultas.Where(m => m.MedicoId == medico.Id).FirstOrDefaultAsync();
 
                 if (consultas != null)
                 {

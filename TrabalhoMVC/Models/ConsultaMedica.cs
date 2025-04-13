@@ -37,7 +37,7 @@ namespace TrabalhoMVC.Models
         public string Observacoes { get; set; }
 
         // Propriedades de navegação
-        public virtual Paciente Paciente { get; set; }
-        public virtual Medico Medico { get; set; }
+        public virtual Paciente? Paciente { get; set; }
+        public virtual Medico? Medico { get; set; }
     }
 }

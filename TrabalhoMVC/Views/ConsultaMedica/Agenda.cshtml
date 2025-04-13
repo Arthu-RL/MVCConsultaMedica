@@ -118,7 +118,6 @@
         </div>
     </div>
 
-    <!-- Consulta usando funções de grupo -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">Estatísticas por Médico (Mês @dataAtual?.ToString("MM/yyyy"))</h5>
@@ -163,7 +162,7 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Médicos com @minimoConsultas ou mais consultas realizadas (Mês @dataAtual?.ToString("MM/yyyy"))</h5>
+            <h5 class="mb-0">Médicos com @minimoConsultas ou mais consultas (realizadas e/ou canceladas) no mês @dataAtual?.ToString("MM/yyyy")</h5>
         </div>
         <div class="card-body">
             @if (medicosComMuitasConsultas != null && medicosComMuitasConsultas.Any())
@@ -203,7 +202,7 @@
             else
             {
                 <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Nenhum médico tem @minimoConsultas ou mais consultas realizadas neste mês.
+                    <i class="bi bi-info-circle"></i> Nenhum médico tem @minimoConsultas ou mais consultas (realizadas e/ou canceladas) neste mês.
                 </div>
             }
         </div>

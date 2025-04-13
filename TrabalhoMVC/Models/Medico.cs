@@ -20,7 +20,7 @@ namespace TrabalhoMVC.Models
         public bool Ativo { get; set; } = true;
 
         // Propriedade de navegação para o relacionamento
-        public virtual ICollection<ConsultaMedica> Consultas { get; set; }
+        public virtual ICollection<ConsultaMedica>? Consultas { get; set; }
 
         // Propriedade calculada para exibir o nome completo com título e CRM
         [DisplayName("Nome Completo")]

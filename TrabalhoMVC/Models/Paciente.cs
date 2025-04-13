@@ -14,7 +14,7 @@ namespace TrabalhoMVC.Models
         public DateTime DataNascimento { get; set; }
 
         // Propriedade de navegação para o relacionamento
-        public virtual ICollection<ConsultaMedica> Consultas { get; set; }
+        public virtual ICollection<ConsultaMedica>? Consultas { get; set; }
 
         // Propriedade calculada para mostrar a idade
         [DisplayName("Idade")]
