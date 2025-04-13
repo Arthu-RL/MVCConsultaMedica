@@ -7,14 +7,14 @@
 <div class="container">
     <h2>Consultas Médicas</h2>
 
-    <p>
+    <div class="d-flex gap-2 mb-3">
         <a asp-action="Create" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Nova Consulta
         </a>
         <a asp-action="Agenda" class="btn btn-info">
-            <i class="bi bi-calendar3"></i> Ver Agenda
+            <i class="bi bi-calendar3"></i> Ver Agenda e Estatísticas
         </a>
-    </p>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
@@ -48,22 +48,22 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DataConsulta)
+                                    @item.DataConsulta.ToString("dd/MM/yyyy HH:mm")
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                                    @item.Paciente?.Nome
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Medico.Nome) -
-                                    @Html.DisplayFor(modelItem => item.Medico.Especialidade)
+                                    @item.Medico?.Nome -
+                                    @item.Medico?.Especialidade
                                 </td>
                                 <td>
                                     <span class="badge @GetStatusBadgeClass(item.Status)">
-                                        @Html.DisplayFor(modelItem => item.Status)
+                                        @item.Status
                                     </span>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Valor)
+                                    @string.Format("{0:C}", item.Valor)
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">

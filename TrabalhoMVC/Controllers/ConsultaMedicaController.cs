@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TrabalhoMVC.Models;
 using TrabalhoMVC.Database;
+using System.Collections.Generic;
 
 namespace TrabalhoMVC.Controllers
 {
@@ -21,11 +21,13 @@ namespace TrabalhoMVC.Controllers
         // GET: ConsultaMedica
         public async Task<IActionResult> Index()
         {
-            var consultas = await _context.Consultas
-                .Include(c => c.Paciente)
-                .Include(c => c.Medico)
-                .OrderByDescending(c => c.DataConsulta)
-                .ToListAsync();
+            var consultas = await (from c in _context.Consultas
+                                   join p in _context.Pacientes on c.PacienteId equals p.Id
+                                   join m in _context.Medicos on c.MedicoId equals m.Id
+                                   orderby c.DataConsulta descending
+                                   select c).Include(c => c.Paciente)
+                                           .Include(c => c.Medico)
+                                           .ToListAsync();
 
             return View(consultas);
         }
@@ -38,10 +40,11 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            var consultaMedica = await _context.Consultas
-                .Include(c => c.Paciente)
-                .Include(c => c.Medico)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var consultaMedica = await (from c in _context.Consultas
+                                        where c.Id == id
+                                        select c).Include(c => c.Paciente)
+                                                .Include(c => c.Medico)
+                                                .FirstOrDefaultAsync();
 
             if (consultaMedica == null)
             {
@@ -54,29 +57,29 @@ namespace TrabalhoMVC.Controllers
         // GET: ConsultaMedica/Create
         public IActionResult Create()
         {
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "Id", "Nome");
-            ViewData["MedicoId"] = new SelectList(_context.Medicos.Where(m => m.Ativo), "Id", "Nome");
-
-            // Status possíveis para uma nova consulta - usando Enum
-            ViewData["StatusOptions"] = new SelectList(Enum.GetValues(typeof(StatusConsulta))
-                .Cast<StatusConsulta>()
-                .Where(s => s == StatusConsulta.Agendada || s == StatusConsulta.Confirmada)
-                .Select(s => new { Id = s, Name = s.ToString() }), "Id", "Name");
-
-            // Data padrão = data atual + 1 dia
-            var consulta = new ConsultaMedica
+            var model = new ConsultaMedica
             {
-                DataConsulta = DateTime.Now.AddDays(1).Date.AddHours(9), // 9:00 AM do dia seguinte
-                Status = StatusConsulta.Agendada // Status padrão
+                DataConsulta = DateTime.Now.AddDays(1).Date.AddHours(9),
+                Status = StatusConsulta.Agendada
             };
 
-            return View(consulta);
+            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
+            var medicos = (from m in _context.Medicos where m.Ativo orderby m.Nome select m).ToList();
+            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
+                                 where s == StatusConsulta.Agendada || s == StatusConsulta.Confirmada
+                                 select s).ToList();
+
+            ViewBag.PacienteList = pacientes;
+            ViewBag.MedicoList = medicos;
+            ViewBag.StatusList = statusOptions;
+
+            return View(model);
         }
 
         // POST: ConsultaMedica/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PacienteId,MedicoId,DataConsulta,Status,Valor,Observacoes")] ConsultaMedica consultaMedica)
+        public async Task<IActionResult> Create(ConsultaMedica consultaMedica)
         {
             if (ModelState.IsValid)
             {
@@ -85,12 +88,15 @@ namespace TrabalhoMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "Id", "Nome", consultaMedica.PacienteId);
-            ViewData["MedicoId"] = new SelectList(_context.Medicos.Where(m => m.Ativo), "Id", "Nome", consultaMedica.MedicoId);
-            ViewData["StatusOptions"] = new SelectList(Enum.GetValues(typeof(StatusConsulta))
-                .Cast<StatusConsulta>()
-                .Where(s => s == StatusConsulta.Agendada || s == StatusConsulta.Confirmada)
-                .Select(s => new { Id = s, Name = s.ToString() }), "Id", "Name", consultaMedica.Status);
+            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
+            var medicos = (from m in _context.Medicos where m.Ativo orderby m.Nome select m).ToList();
+            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
+                                 where s == StatusConsulta.Agendada || s == StatusConsulta.Confirmada
+                                 select s).ToList();
+
+            ViewBag.PacienteList = pacientes;
+            ViewBag.MedicoList = medicos;
+            ViewBag.StatusList = statusOptions;
 
             return View(consultaMedica);
         }
@@ -103,19 +109,20 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            var consultaMedica = await _context.Consultas.FindAsync(id);
+            var consultaMedica = await (from c in _context.Consultas where c.Id == id select c).FirstOrDefaultAsync();
             if (consultaMedica == null)
             {
                 return NotFound();
             }
 
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "Id", "Nome", consultaMedica.PacienteId);
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "Id", "Nome", consultaMedica.MedicoId);
+            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
+            var medicos = (from m in _context.Medicos orderby m.Nome select m).ToList();
+            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
+                                 select s).ToList();
 
-            // Status possíveis para uma consulta em edição - usando Enum
-            ViewData["StatusOptions"] = new SelectList(Enum.GetValues(typeof(StatusConsulta))
-                .Cast<StatusConsulta>()
-                .Select(s => new { Id = s, Name = s.ToString() }), "Id", "Name", consultaMedica.Status);
+            ViewBag.PacienteList = pacientes;
+            ViewBag.MedicoList = medicos;
+            ViewBag.StatusList = statusOptions;
 
             return View(consultaMedica);
         }
@@ -123,7 +130,7 @@ namespace TrabalhoMVC.Controllers
         // POST: ConsultaMedica/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PacienteId,MedicoId,DataConsulta,Status,Valor,Observacoes")] ConsultaMedica consultaMedica)
+        public async Task<IActionResult> Edit(int id, ConsultaMedica consultaMedica)
         {
             if (id != consultaMedica.Id)
             {
@@ -151,10 +158,14 @@ namespace TrabalhoMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["PacienteId"] = new SelectList(_context.Pacientes, "Id", "Nome", consultaMedica.PacienteId);
-            ViewData["MedicoId"] = new SelectList(_context.Medicos, "Id", "Nome", consultaMedica.MedicoId);
-            List<string> statusList = new List<string> { "Agendada", "Confirmada", "Realizada", "Cancelada" };
-            ViewData["StatusOptions"] = new SelectList(statusList, consultaMedica.Status);
+            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
+            var medicos = (from m in _context.Medicos orderby m.Nome select m).ToList();
+            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
+                                 select s).ToList();
+
+            ViewBag.PacienteList = pacientes;
+            ViewBag.MedicoList = medicos;
+            ViewBag.StatusList = statusOptions;
 
             return View(consultaMedica);
         }
@@ -167,10 +178,11 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            var consultaMedica = await _context.Consultas
-                .Include(c => c.Paciente)
-                .Include(c => c.Medico)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var consultaMedica = await (from c in _context.Consultas
+                                        where c.Id == id
+                                        select c).Include(c => c.Paciente)
+                                                .Include(c => c.Medico)
+                                                .FirstOrDefaultAsync();
 
             if (consultaMedica == null)
             {
@@ -185,7 +197,7 @@ namespace TrabalhoMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var consultaMedica = await _context.Consultas.FindAsync(id);
+            var consultaMedica = await (from c in _context.Consultas where c.Id == id select c).FirstOrDefaultAsync();
             if (consultaMedica != null)
             {
                 _context.Consultas.Remove(consultaMedica);
@@ -195,25 +207,85 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: ConsultaMedica/Agenda
-        public async Task<IActionResult> Agenda(DateTime? data)
+        public async Task<IActionResult> Agenda(DateTime? data, int? minimoConsultas)
         {
-            // Se não for informada data, considera a data atual
             data = data ?? DateTime.Today;
+            minimoConsultas = minimoConsultas ?? 1;
 
-            var consultas = await _context.Consultas
-                .Include(c => c.Paciente)
-                .Include(c => c.Medico)
-                .Where(c => c.DataConsulta.Date == data.Value.Date)
-                .OrderBy(c => c.DataConsulta)
-                .ToListAsync();
+            var consultas = await (from c in _context.Consultas
+                                   where c.DataConsulta.Date == data.Value.Date
+                                   orderby c.DataConsulta
+                                   select c).Include(c => c.Paciente)
+                                           .Include(c => c.Medico)
+                                           .ToListAsync();
+
+            var estatisticasPorMedico = await (from c in _context.Consultas
+                                               join m in _context.Medicos on c.MedicoId equals m.Id
+                                               where c.DataConsulta.Month == data.Value.Month
+                                                  && c.DataConsulta.Year == data.Value.Year
+                                               group c by new { m.Id, m.Nome, m.Especialidade } into grp
+                                               select new MedicoEstatisticas
+                                               {
+                                                   MedicoId = grp.Key.Id,
+                                                   MedicoNome = grp.Key.Nome,
+                                                   Especialidade = grp.Key.Especialidade,
+                                                   TotalConsultas = grp.Count(),
+                                                   ValorTotal = grp.Sum(c => c.Valor),
+                                                   ValorMedio = grp.Average(c => c.Valor)
+                                               }).ToListAsync();
+
+            var medicosComMuitasConsultas = await (from c in _context.Consultas
+                                                   join m in _context.Medicos on c.MedicoId equals m.Id
+                                                   where c.DataConsulta.Month == data.Value.Month
+                                                      && c.DataConsulta.Year == data.Value.Year
+                                                      && c.Status == StatusConsulta.Realizada
+                                                   group c by new { m.Id, m.Nome, m.Especialidade } into grp
+                                                   where grp.Count() >= minimoConsultas
+                                                   orderby grp.Count() descending
+                                                   select new MedicoComMuitasConsultas
+                                                   {
+                                                       MedicoId = grp.Key.Id,
+                                                       MedicoNome = grp.Key.Nome,
+                                                       Especialidade = grp.Key.Especialidade,
+                                                       TotalConsultas = grp.Count(),
+                                                       ConsultasRealizadas = grp.Count(c => c.Status == StatusConsulta.Realizada),
+                                                       ConsultasCanceladas = grp.Count(c => c.Status == StatusConsulta.Cancelada),
+                                                       PorcentagemCanceladas = grp.Count(c => c.Status == StatusConsulta.Cancelada) * 100.0m / grp.Count()
+                                                   }).ToListAsync();
 
             ViewBag.Data = data;
+            ViewBag.MinimoConsultas = minimoConsultas;
+            ViewBag.EstatisticasPorMedico = estatisticasPorMedico;
+            ViewBag.MedicosComMuitasConsultas = medicosComMuitasConsultas;
+
             return View(consultas);
         }
 
         private bool ConsultaMedicaExists(int id)
         {
-            return _context.Consultas.Any(c => c.Id == id);
+            return (from c in _context.Consultas where c.Id == id select c).Any();
         }
+    }
+
+    // Classes auxiliares para agrupamento de dados
+    public class MedicoEstatisticas
+    {
+        public int MedicoId { get; set; }
+        public string MedicoNome { get; set; }
+        public string Especialidade { get; set; }
+        public int TotalConsultas { get; set; }
+        public decimal ValorTotal { get; set; }
+        public decimal ValorMedio { get; set; }
+    }
+
+    public class MedicoComMuitasConsultas
+    {
+        public int MedicoId { get; set; }
+        public string MedicoNome { get; set; }
+        public string Especialidade { get; set; }
+        public int TotalConsultas { get; set; }
+        public int ConsultasRealizadas { get; set; }
+        public int ConsultasCanceladas { get; set; }
+        public decimal PorcentagemCanceladas { get; set; }
     }
 }

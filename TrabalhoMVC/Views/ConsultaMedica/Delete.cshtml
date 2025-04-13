@@ -24,18 +24,18 @@
                             <h6>Dados do Paciente</h6>
                             <dl>
                                 <dt>Nome</dt>
-                                <dd>@Html.DisplayFor(model => model.Paciente.Nome)</dd>
+                                <dd>@Model.Paciente?.Nome</dd>
                                 <dt>CPF</dt>
-                                <dd>@Html.DisplayFor(model => model.Paciente.CPF)</dd>
+                                <dd>@Model.Paciente?.CPF</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
                             <h6>Dados do Médico</h6>
                             <dl>
                                 <dt>Nome</dt>
-                                <dd>@Html.DisplayFor(model => model.Medico.Nome)</dd>
+                                <dd>@Model.Medico?.Nome</dd>
                                 <dt>Especialidade</dt>
-                                <dd>@Html.DisplayFor(model => model.Medico.Especialidade)</dd>
+                                <dd>@Model.Medico?.Especialidade</dd>
                             </dl>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                 <dt>@Html.DisplayNameFor(model => model.Status)</dt>
                                 <dd>@Html.DisplayFor(model => model.Status)</dd>
                                 <dt>@Html.DisplayNameFor(model => model.Valor)</dt>
-                                <dd>@Html.DisplayFor(model => model.Valor)</dd>
+                                <dd>@string.Format("{0:C}", Model.Valor)</dd>
                             </dl>
                         </div>
                     </div>

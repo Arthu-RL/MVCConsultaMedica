@@ -41,38 +41,6 @@
                                 <i class="bi bi-calendar-week"></i> Agenda
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"].ToString() == "Relatorios" ? "active" : "")"
-                               href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-file-earmark-bar-graph"></i> Relatórios
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="relatoriosDropdown">
-                                <li>
-                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "ConsultasDetalhadas" ? "active" : "")"
-                                       asp-controller="Relatorios" asp-action="ConsultasDetalhadas">
-                                        <i class="bi bi-file-earmark-text"></i> Consultas Detalhadas
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "EstatisticasPorMedico" ? "active" : "")"
-                                       asp-controller="Relatorios" asp-action="EstatisticasPorMedico">
-                                        <i class="bi bi-bar-chart"></i> Estatísticas por Médico
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "MedicosDestaque" ? "active" : "")"
-                                       asp-controller="Relatorios" asp-action="MedicosDestaque">
-                                        <i class="bi bi-award"></i> Médicos em Destaque
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "ConsultasPorPeriodo" ? "active" : "")"
-                                       asp-controller="Relatorios" asp-action="ConsultasPorPeriodo">
-                                        <i class="bi bi-calendar-range"></i> Consultas por Período
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                 </div>
             </div>

@@ -139,6 +139,12 @@ namespace TrabalhoMVC.Controllers
             var medico = await _context.Medicos.FindAsync(id);
             if (medico != null)
             {
+                var consultas = await _context.Consultas.FindAsync(medico.Id);
+
+                if (consultas != null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Medicos.Remove(medico);
                 await _context.SaveChangesAsync();
             }

@@ -61,6 +61,10 @@ namespace TrabalhoMVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                Console.WriteLine("Model invalid");
+            }
             return View(paciente);
         }
 
@@ -139,6 +143,13 @@ namespace TrabalhoMVC.Controllers
             var paciente = await _context.Pacientes.FindAsync(id);
             if (paciente != null)
             {
+                var consultas = await _context.Consultas.FindAsync(paciente.Id);
+
+                if (consultas != null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _context.Pacientes.Remove(paciente);
                 await _context.SaveChangesAsync();
             }

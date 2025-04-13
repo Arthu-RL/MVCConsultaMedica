@@ -12,7 +12,7 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Informações da Consulta #@Model.Id</h5>
-                    <span class="badge @GetStatusBadgeClass(Model.Status) p-2">@Html.DisplayFor(model => model.Status)</span>
+                    <span class="badge @GetStatusBadgeClass(Model.Status) p-2">@Model.Status</span>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -20,22 +20,22 @@
                             <h6>Dados do Paciente</h6>
                             <dl>
                                 <dt>Nome</dt>
-                                <dd>@Html.DisplayFor(model => model.Paciente.Nome)</dd>
+                                <dd>@Model.Paciente?.Nome</dd>
                                 <dt>CPF</dt>
-                                <dd>@Html.DisplayFor(model => model.Paciente.CPF)</dd>
+                                <dd>@Model.Paciente?.CPF</dd>
                                 <dt>Telefone</dt>
-                                <dd>@Html.DisplayFor(model => model.Paciente.Telefone)</dd>
+                                <dd>@Model.Paciente?.Telefone</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
                             <h6>Dados do Médico</h6>
                             <dl>
                                 <dt>Nome</dt>
-                                <dd>@Html.DisplayFor(model => model.Medico.Nome)</dd>
+                                <dd>@Model.Medico?.Nome</dd>
                                 <dt>CRM</dt>
-                                <dd>@Html.DisplayFor(model => model.Medico.CRM)</dd>
+                                <dd>@Model.Medico?.CRM</dd>
                                 <dt>Especialidade</dt>
-                                <dd>@Html.DisplayFor(model => model.Medico.Especialidade)</dd>
+                                <dd>@Model.Medico?.Especialidade</dd>
                             </dl>
                         </div>
                     </div>
@@ -45,9 +45,9 @@
                             <h6>Dados da Consulta</h6>
                             <dl>
                                 <dt>@Html.DisplayNameFor(model => model.DataConsulta)</dt>
-                                <dd>@Html.DisplayFor(model => model.DataConsulta)</dd>
+                                <dd>@Model.DataConsulta.ToString("dd/MM/yyyy HH:mm")</dd>
                                 <dt>@Html.DisplayNameFor(model => model.Valor)</dt>
-                                <dd>@Html.DisplayFor(model => model.Valor)</dd>
+                                <dd>@string.Format("{0:C}", Model.Valor)</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
@@ -55,7 +55,7 @@
                             <div class="border rounded p-2 bg-light">
                                 @if (!string.IsNullOrEmpty(Model.Observacoes))
                                 {
-                                    @Html.DisplayFor(model => model.Observacoes)
+                                    @Model.Observacoes
                                 }
                                 else
                                 {

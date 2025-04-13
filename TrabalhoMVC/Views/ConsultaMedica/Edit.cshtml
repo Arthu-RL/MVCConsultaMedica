@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Editar Consulta";
+    var pacientes = ViewBag.PacienteList as List<TrabalhoMVC.Models.Paciente>;
+    var medicos = ViewBag.MedicoList as List<TrabalhoMVC.Models.Medico>;
+    var statusList = ViewBag.StatusList as List<TrabalhoMVC.Models.StatusConsulta>;
 }
 
 <div class="container">
@@ -22,14 +25,30 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="PacienteId" class="control-label">Paciente</label>
-                                    <select asp-for="PacienteId" class="form-select" asp-items="ViewBag.PacienteId"></select>
+                                    <select asp-for="PacienteId" class="form-select">
+                                        <option value="">Selecione um paciente</option>
+                                        @foreach (var paciente in pacientes)
+                                        {
+                                            <option value="@paciente.Id" selected="@(Model.PacienteId == paciente.Id)">
+                                                @paciente.Nome
+                                            </option>
+                                        }
+                                    </select>
                                     <span asp-validation-for="PacienteId" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="MedicoId" class="control-label">Médico</label>
-                                    <select asp-for="MedicoId" class="form-select" asp-items="ViewBag.MedicoId"></select>
+                                    <select asp-for="MedicoId" class="form-select">
+                                        <option value="">Selecione um médico</option>
+                                        @foreach (var medico in medicos)
+                                        {
+                                            <option value="@medico.Id" selected="@(Model.MedicoId == medico.Id)">
+                                                @medico.Nome (@medico.Especialidade)
+                                            </option>
+                                        }
+                                    </select>
                                     <span asp-validation-for="MedicoId" class="text-danger"></span>
                                 </div>
                             </div>
@@ -46,7 +65,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="Status" class="control-label">Status</label>
-                                    <select asp-for="Status" class="form-select" asp-items="ViewBag.StatusOptions"></select>
+                                    <select asp-for="Status" class="form-select">
+                                        @foreach (var status in statusList)
+                                        {
+                                            <option value="@status" selected="@(Model.Status == status)">
+                                                @status
+                                            </option>
+                                        }
+                                    </select>
                                     <span asp-validation-for="Status" class="text-danger"></span>
                                 </div>
                             </div>

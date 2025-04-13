@@ -4,6 +4,9 @@
     ViewData["Title"] = "Agenda de Consultas";
     var dataAtual = ViewBag.Data as DateTime?;
     var dataFormatada = dataAtual?.ToString("dd/MM/yyyy");
+    var minimoConsultas = ViewBag.MinimoConsultas;
+    var estatisticasPorMedico = ViewBag.EstatisticasPorMedico as List<TrabalhoMVC.Controllers.MedicoEstatisticas>;
+    var medicosComMuitasConsultas = ViewBag.MedicosComMuitasConsultas as List<TrabalhoMVC.Controllers.MedicoComMuitasConsultas>;
 }
 
 <div class="container">
@@ -16,8 +19,23 @@
                     <h5>Selecione uma data</h5>
                     <form asp-action="Agenda" method="get" class="d-flex">
                         <input type="date" name="data" class="form-control me-2" value="@dataAtual?.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="minimoConsultas" value="@minimoConsultas" />
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Mínimo de consultas para estatísticas</h5>
+                    <form asp-action="Agenda" method="get" class="d-flex">
+                        <input type="hidden" name="data" value="@dataAtual?.ToString("yyyy-MM-dd")" />
+                        <input type="number" name="minimoConsultas" class="form-control me-2" value="@minimoConsultas" min="1" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-filter"></i> Filtrar
                         </button>
                     </form>
                 </div>
@@ -30,10 +48,10 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Consultas do dia @dataFormatada</h5>
                 <div>
-                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(-1).ToString("yyyy-MM-dd"))" class="btn btn-sm btn-light">
+                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(-1).ToString("yyyy-MM-dd"))" asp-route-minimoConsultas="@minimoConsultas" class="btn btn-sm btn-light">
                         <i class="bi bi-chevron-left"></i> Dia Anterior
                     </a>
-                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(1).ToString("yyyy-MM-dd"))" class="btn btn-sm btn-light">
+                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(1).ToString("yyyy-MM-dd"))" asp-route-minimoConsultas="@minimoConsultas" class="btn btn-sm btn-light">
                         Próximo Dia <i class="bi bi-chevron-right"></i>
                     </a>
                 </div>
@@ -62,17 +80,17 @@
                                         <strong>@item.DataConsulta.ToString("HH:mm")</strong>
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                                        @item.Paciente?.Nome
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Medico.Nome)
+                                        @item.Medico?.Nome
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Medico.Especialidade)
+                                        @item.Medico?.Especialidade
                                     </td>
                                     <td>
                                         <span class="badge @GetStatusBadgeClass(item.Status)">
-                                            @Html.DisplayFor(modelItem => item.Status)
+                                            @item.Status
                                         </span>
                                     </td>
                                     <td>
@@ -95,6 +113,97 @@
             {
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle"></i> Não há consultas agendadas para esta data.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Consulta usando funções de grupo -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Estatísticas por Médico (Mês @dataAtual?.ToString("MM/yyyy"))</h5>
+        </div>
+        <div class="card-body">
+            @if (estatisticasPorMedico != null && estatisticasPorMedico.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Médico</th>
+                                <th>Especialidade</th>
+                                <th>Total de Consultas</th>
+                                <th>Valor Total (R$)</th>
+                                <th>Valor Médio (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in estatisticasPorMedico)
+                            {
+                                <tr>
+                                    <td>@item.MedicoNome</td>
+                                    <td>@item.Especialidade</td>
+                                    <td class="text-center">@item.TotalConsultas</td>
+                                    <td class="text-end">@string.Format("{0:C}", item.ValorTotal)</td>
+                                    <td class="text-end">@string.Format("{0:C}", item.ValorMedio)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Não há estatísticas disponíveis para este mês.
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Médicos com @minimoConsultas ou mais consultas realizadas (Mês @dataAtual?.ToString("MM/yyyy"))</h5>
+        </div>
+        <div class="card-body">
+            @if (medicosComMuitasConsultas != null && medicosComMuitasConsultas.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Médico</th>
+                                <th>Especialidade</th>
+                                <th>Total de Consultas</th>
+                                <th>Realizadas</th>
+                                <th>Canceladas</th>
+                                <th>% Canceladas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in medicosComMuitasConsultas)
+                            {
+                                <tr>
+                                    <td>@item.MedicoNome</td>
+                                    <td>@item.Especialidade</td>
+                                    <td class="text-center">@item.TotalConsultas</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success">@item.ConsultasRealizadas</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-danger">@item.ConsultasCanceladas</span>
+                                    </td>
+                                    <td class="text-center">@string.Format("{0:N1}%", item.PorcentagemCanceladas)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Nenhum médico tem @minimoConsultas ou mais consultas realizadas neste mês.
                 </div>
             }
         </div>
