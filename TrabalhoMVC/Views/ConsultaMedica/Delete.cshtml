@@ -1,0 +1,71 @@
+﻿@model TrabalhoMVC.Models.ConsultaMedica
+
+@{
+    ViewData["Title"] = "Excluir Consulta";
+}
+
+<div class="container">
+    <h2>Excluir Consulta</h2>
+
+    <div class="alert alert-danger mb-4">
+        <h4><i class="bi bi-exclamation-triangle-fill"></i> Tem certeza que deseja excluir esta consulta?</h4>
+        <p>Esta ação não poderá ser desfeita.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Detalhes da Consulta #@Model.Id</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Dados do Paciente</h6>
+                            <dl>
+                                <dt>Nome</dt>
+                                <dd>@Html.DisplayFor(model => model.Paciente.Nome)</dd>
+                                <dt>CPF</dt>
+                                <dd>@Html.DisplayFor(model => model.Paciente.CPF)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Dados do Médico</h6>
+                            <dl>
+                                <dt>Nome</dt>
+                                <dd>@Html.DisplayFor(model => model.Medico.Nome)</dd>
+                                <dt>Especialidade</dt>
+                                <dd>@Html.DisplayFor(model => model.Medico.Especialidade)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Dados da Consulta</h6>
+                            <dl>
+                                <dt>@Html.DisplayNameFor(model => model.DataConsulta)</dt>
+                                <dd>@Html.DisplayFor(model => model.DataConsulta)</dd>
+                                <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+                                <dd>@Html.DisplayFor(model => model.Status)</dd>
+                                <dt>@Html.DisplayNameFor(model => model.Valor)</dt>
+                                <dd>@Html.DisplayFor(model => model.Valor)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Confirmar Exclusão
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar à Lista
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

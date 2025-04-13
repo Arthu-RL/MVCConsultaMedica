@@ -1,8 +1,123 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Início";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="jumbotron bg-white p-4 rounded shadow-sm mb-4">
+        <h1 class="display-4">Sistema de Consultas Médicas</h1>
+        <p class="lead">Bem-vindo ao sistema de gerenciamento de consultas médicas. Utilize as funcionalidades para agendar, gerenciar e visualizar relatórios de consultas.</p>
+        <hr class="my-4">
+        <p>Este sistema utiliza tecnologias modernas como ASP.NET Core, Entity Framework Core e Bootstrap.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Pacientes</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cadastre e gerencie os pacientes da clínica. Visualize o histórico de consultas de cada paciente.</p>
+                    <a asp-controller="Paciente" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-vcard"></i> Médicos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cadastre e gerencie os médicos e suas especialidades. Visualize a agenda e o desempenho de cada médico.</p>
+                    <a asp-controller="Medico" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Consultas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Agende novas consultas, gerencie as consultas existentes e visualize a agenda médica.</p>
+                    <a asp-controller="ConsultaMedica" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-week"></i> Agenda</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Visualize a agenda de consultas por data. Facilita o gerenciamento das consultas diárias.</p>
+                    <a asp-controller="ConsultaMedica" asp-action="Agenda" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-file-earmark-text text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Consultas Detalhadas</h5>
+                            <p class="small text-muted">Visualize detalhes de todas as consultas</p>
+                            <a asp-controller="Relatorios" asp-action="ConsultasDetalhadas" class="btn btn-sm btn-outline-primary mt-2">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-bar-chart text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Estatísticas</h5>
+                            <p class="small text-muted">Estatísticas por médico</p>
+                            <a asp-controller="Relatorios" asp-action="EstatisticasPorMedico" class="btn btn-sm btn-outline-primary mt-2">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-award text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Médicos Destaque</h5>
+                            <p class="small text-muted">Médicos com melhor desempenho</p>
+                            <a asp-controller="Relatorios" asp-action="MedicosDestaque" class="btn btn-sm btn-outline-primary mt-2">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-range text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Por Período</h5>
+                            <p class="small text-muted">Consultas filtradas por período</p>
+                            <a asp-controller="Relatorios" asp-action="ConsultasPorPeriodo" class="btn btn-sm btn-outline-primary mt-2">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

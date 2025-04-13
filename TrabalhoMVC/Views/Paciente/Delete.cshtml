@@ -1,0 +1,61 @@
+﻿@model TrabalhoMVC.Models.Paciente
+
+@{
+    ViewData["Title"] = "Excluir Paciente";
+}
+
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4><i class="bi bi-trash"></i> Confirmar Exclusão</h4>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> Tem certeza que deseja excluir o paciente <strong>@Model.Nome</strong>?
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Nome)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CPF)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CPF)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.DataNascimento)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.DataNascimento)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Telefone)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Telefone)
+            </dd>
+        </dl>
+
+        @if (Model.Consultas != null && Model.Consultas.Any())
+        {
+            <div class="alert alert-danger mt-3">
+                <i class="bi bi-exclamation-circle"></i> <strong>Atenção!</strong> Este paciente possui @Model.Consultas.Count() consulta(s) registrada(s).
+                A exclusão pode afetar registros relacionados.
+            </div>
+        }
+
+        <form asp-action="Delete" class="mt-3">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Confirmar Exclusão
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </form>
+    </div>
+</div>

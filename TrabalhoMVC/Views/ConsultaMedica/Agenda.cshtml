@@ -1,0 +1,124 @@
+﻿@model IEnumerable<TrabalhoMVC.Models.ConsultaMedica>
+
+@{
+    ViewData["Title"] = "Agenda de Consultas";
+    var dataAtual = ViewBag.Data as DateTime?;
+    var dataFormatada = dataAtual?.ToString("dd/MM/yyyy");
+}
+
+<div class="container">
+    <h2>Agenda de Consultas</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Selecione uma data</h5>
+                    <form asp-action="Agenda" method="get" class="d-flex">
+                        <input type="date" name="data" class="form-control me-2" value="@dataAtual?.ToString("yyyy-MM-dd")" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Consultas do dia @dataFormatada</h5>
+                <div>
+                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(-1).ToString("yyyy-MM-dd"))" class="btn btn-sm btn-light">
+                        <i class="bi bi-chevron-left"></i> Dia Anterior
+                    </a>
+                    <a asp-action="Agenda" asp-route-data="@(dataAtual?.AddDays(1).ToString("yyyy-MM-dd"))" class="btn btn-sm btn-light">
+                        Próximo Dia <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Horário</th>
+                                <th>Paciente</th>
+                                <th>Médico</th>
+                                <th>Especialidade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@item.DataConsulta.ToString("HH:mm")</strong>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Medico.Nome)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Medico.Especialidade)
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(item.Status)">
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Detalhes">
+                                                <i class="bi bi-info-circle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Não há consultas agendadas para esta data.
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nova Consulta
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar à Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(TrabalhoMVC.Models.StatusConsulta status)
+    {
+        return status switch
+        {
+            TrabalhoMVC.Models.StatusConsulta.Agendada => "bg-primary",
+            TrabalhoMVC.Models.StatusConsulta.Confirmada => "bg-info",
+            TrabalhoMVC.Models.StatusConsulta.Realizada => "bg-success",
+            TrabalhoMVC.Models.StatusConsulta.Cancelada => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

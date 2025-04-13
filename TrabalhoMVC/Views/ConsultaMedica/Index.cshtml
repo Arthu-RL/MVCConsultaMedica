@@ -1,0 +1,102 @@
+﻿@model IEnumerable<TrabalhoMVC.Models.ConsultaMedica>
+
+@{
+    ViewData["Title"] = "Consultas Médicas";
+}
+
+<div class="container">
+    <h2>Consultas Médicas</h2>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nova Consulta
+        </a>
+        <a asp-action="Agenda" class="btn btn-info">
+            <i class="bi bi-calendar3"></i> Ver Agenda
+        </a>
+    </p>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Lista de Consultas</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DataConsulta)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Paciente)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Medico)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Valor)
+                            </th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DataConsulta)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Paciente.Nome)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Medico.Nome) -
+                                    @Html.DisplayFor(modelItem => item.Medico.Especialidade)
+                                </td>
+                                <td>
+                                    <span class="badge @GetStatusBadgeClass(item.Status)">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Valor)
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Detalhes">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(TrabalhoMVC.Models.StatusConsulta status)
+    {
+        return status switch
+        {
+            TrabalhoMVC.Models.StatusConsulta.Agendada => "bg-primary",
+            TrabalhoMVC.Models.StatusConsulta.Confirmada => "bg-info",
+            TrabalhoMVC.Models.StatusConsulta.Realizada => "bg-success",
+            TrabalhoMVC.Models.StatusConsulta.Cancelada => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

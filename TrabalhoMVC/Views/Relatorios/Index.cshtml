@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Relatórios";
+}
+
+<div class="container">
+    <h2 class="mb-4">Relatórios Disponíveis</h2>
+    <p class="lead mb-4">Selecione um relatório para visualizar dados analíticos do sistema de consultas médicas.</p>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Consultas Detalhadas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Relatório completo com detalhes de todas as consultas, incluindo dados do paciente e médico.</p>
+                    <p><small class="text-muted">Consulta 1: Usando dados de duas classes relacionadas</small></p>
+                </div>
+                <div class="card-footer bg-light">
+                    <a asp-action="ConsultasDetalhadas" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Estatísticas por Médico</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Análise estatística de consultas realizadas por médico, incluindo valor médio, total e quantidade.</p>
+                    <p><small class="text-muted">Consulta 2: Usando funções de grupo (COUNT, SUM, AVG, MAX, MIN)</small></p>
+                </div>
+                <div class="card-footer bg-light">
+                    <a asp-action="EstatisticasPorMedico" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-award"></i> Médicos em Destaque</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Médicos ativos com melhor performance, considerando quantidade de consultas e valor médio.</p>
+                    <p><small class="text-muted">Consulta 3: Com filtro principal (WHERE) e filtro do grupo (HAVING)</small></p>
+                </div>
+                <div class="card-footer bg-light">
+                    <a asp-action="MedicosDestaque" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-range"></i> Consultas por Período</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Relatório de consultas filtradas por um período específico definido pelo usuário.</p>
+                    <p><small class="text-muted">Consulta adicional com filtro de datas personalizável</small></p>
+                </div>
+                <div class="card-footer bg-light">
+                    <a asp-action="ConsultasPorPeriodo" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right"></i> Acessar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

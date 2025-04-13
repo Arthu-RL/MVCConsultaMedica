@@ -1,0 +1,128 @@
+﻿@model TrabalhoMVC.Models.Paciente
+
+@{
+    ViewData["Title"] = "Histórico de Consultas";
+}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="bi bi-clipboard2-pulse"></i> Histórico de Consultas - @Model.Nome</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Dados do Paciente</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Nome:</dt>
+                            <dd class="col-sm-8">@Model.Nome</dd>
+
+                            <dt class="col-sm-4">CPF:</dt>
+                            <dd class="col-sm-8">@Model.CPF</dd>
+
+                            <dt class="col-sm-4">Data de Nascimento:</dt>
+                            <dd class="col-sm-8">@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
+
+                            <dt class="col-sm-4">Telefone:</dt>
+                            <dd class="col-sm-8">@Model.Telefone</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Resumo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-8">Total de consultas:</div>
+                            <div class="col-4 text-end fw-bold">@Model.Consultas?.Count()</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-8">Consultas realizadas:</div>
+                            <div class="col-4 text-end fw-bold">@Model.Consultas?.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Realizada)</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-8">Consultas agendadas:</div>
+                            <div class="col-4 text-end fw-bold">@Model.Consultas?.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Agendada || c.Status == TrabalhoMVC.Models.StatusConsulta.Confirmada)</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">Consultas canceladas:</div>
+                            <div class="col-4 text-end fw-bold">@Model.Consultas?.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Cancelada)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Consultas != null && Model.Consultas.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Data</th>
+                            <th>Médico</th>
+                            <th>Especialidade</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th>Observações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var consulta in Model.Consultas.OrderByDescending(c => c.DataConsulta))
+                        {
+                            <tr>
+                                <td>@consulta.DataConsulta.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@consulta.Medico.Nome</td>
+                                <td>@consulta.Medico.Especialidade</td>
+                                <td>
+                                    @{
+                                        string badgeClass = consulta.Status switch
+                                        {
+                                            TrabalhoMVC.Models.StatusConsulta.Agendada => "badge bg-primary",
+                                            TrabalhoMVC.Models.StatusConsulta.Confirmada => "badge bg-info",
+                                            TrabalhoMVC.Models.StatusConsulta.Realizada => "badge bg-success",
+                                            TrabalhoMVC.Models.StatusConsulta.Cancelada => "badge bg-danger",
+                                            _ => "badge bg-secondary"
+                                        };
+                                    }
+                                    <span class="@badgeClass">@consulta.Status</span>
+                                </td>
+                                <td>@(consulta.Valor.ToString("C"))</td>
+                                <td>@consulta.Observacoes</td>
+                                <td>
+                                    <a asp-controller="ConsultaMedica" asp-action="Details" asp-route-id="@consulta.Id" class="btn btn-info btn-sm text-white" title="Detalhes">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-info-circle"></i> Este paciente ainda não possui consultas registradas.
+            </div>
+        }
+    </div>
+    <div class="card-footer">
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="bi bi-person"></i> Detalhes do Paciente
+        </a>
+        <a asp-controller="ConsultaMedica" asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nova Consulta
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar à Lista
+        </a>
+    </div>
+</div>

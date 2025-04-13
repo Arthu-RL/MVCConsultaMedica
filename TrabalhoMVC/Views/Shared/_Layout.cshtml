@@ -1,18 +1,20 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TrabalhoMVC</title>
+    <title>@ViewData["Title"] - Sistema de Consultas Médicas</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TrabalhoMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TrabalhoMVC</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-hospital"></i> Sistema de Consultas Médicas
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,10 +22,56 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")"
+                               asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "ConsultaMedica" &&
+                                             ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")"
+                               asp-controller="ConsultaMedica" asp-action="Index">
+                                <i class="bi bi-calendar-check"></i> Consultas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "ConsultaMedica" &&
+                                             ViewContext.RouteData.Values["action"].ToString() == "Agenda" ? "active" : "")"
+                               asp-controller="ConsultaMedica" asp-action="Agenda">
+                                <i class="bi bi-calendar-week"></i> Agenda
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"].ToString() == "Relatorios" ? "active" : "")"
+                               href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-file-earmark-bar-graph"></i> Relatórios
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="relatoriosDropdown">
+                                <li>
+                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "ConsultasDetalhadas" ? "active" : "")"
+                                       asp-controller="Relatorios" asp-action="ConsultasDetalhadas">
+                                        <i class="bi bi-file-earmark-text"></i> Consultas Detalhadas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "EstatisticasPorMedico" ? "active" : "")"
+                                       asp-controller="Relatorios" asp-action="EstatisticasPorMedico">
+                                        <i class="bi bi-bar-chart"></i> Estatísticas por Médico
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "MedicosDestaque" ? "active" : "")"
+                                       asp-controller="Relatorios" asp-action="MedicosDestaque">
+                                        <i class="bi bi-award"></i> Médicos em Destaque
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item @(ViewContext.RouteData.Values["action"].ToString() == "ConsultasPorPeriodo" ? "active" : "")"
+                                       asp-controller="Relatorios" asp-action="ConsultasPorPeriodo">
+                                        <i class="bi bi-calendar-range"></i> Consultas por Período
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -38,7 +86,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - TrabalhoMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - Sistema de Consultas Médicas - <a asp-controller="Home" asp-action="Privacy">Privacidade</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

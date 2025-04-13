@@ -1,0 +1,89 @@
+﻿@model TrabalhoMVC.Models.ConsultaMedica
+
+@{
+    ViewData["Title"] = "Nova Consulta";
+}
+
+<div class="container">
+    <h2>Nova Consulta</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Agendamento de Consulta</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PacienteId" class="control-label">Paciente</label>
+                                    <select asp-for="PacienteId" class="form-select" asp-items="ViewBag.PacienteId"></select>
+                                    <span asp-validation-for="PacienteId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="MedicoId" class="control-label">Médico</label>
+                                    <select asp-for="MedicoId" class="form-select" asp-items="ViewBag.MedicoId"></select>
+                                    <span asp-validation-for="MedicoId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DataConsulta" class="control-label">Data da Consulta</label>
+                                    <input asp-for="DataConsulta" class="form-control" type="datetime-local" />
+                                    <span asp-validation-for="DataConsulta" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Status" class="control-label">Status</label>
+                                    <select asp-for="Status" class="form-select" asp-items="ViewBag.StatusOptions"></select>
+                                    <span asp-validation-for="Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Valor" class="control-label">Valor (R$)</label>
+                                    <input asp-for="Valor" class="form-control" type="number" min="0" step="0.01" />
+                                    <span asp-validation-for="Valor" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Observacoes" class="control-label">Observações</label>
+                            <textarea asp-for="Observacoes" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Salvar
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar à Lista
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

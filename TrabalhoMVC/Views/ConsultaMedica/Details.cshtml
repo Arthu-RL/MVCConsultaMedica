@@ -1,0 +1,95 @@
+﻿@model TrabalhoMVC.Models.ConsultaMedica
+
+@{
+    ViewData["Title"] = "Detalhes da Consulta";
+}
+
+<div class="container">
+    <h2>Detalhes da Consulta</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Informações da Consulta #@Model.Id</h5>
+                    <span class="badge @GetStatusBadgeClass(Model.Status) p-2">@Html.DisplayFor(model => model.Status)</span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Dados do Paciente</h6>
+                            <dl>
+                                <dt>Nome</dt>
+                                <dd>@Html.DisplayFor(model => model.Paciente.Nome)</dd>
+                                <dt>CPF</dt>
+                                <dd>@Html.DisplayFor(model => model.Paciente.CPF)</dd>
+                                <dt>Telefone</dt>
+                                <dd>@Html.DisplayFor(model => model.Paciente.Telefone)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Dados do Médico</h6>
+                            <dl>
+                                <dt>Nome</dt>
+                                <dd>@Html.DisplayFor(model => model.Medico.Nome)</dd>
+                                <dt>CRM</dt>
+                                <dd>@Html.DisplayFor(model => model.Medico.CRM)</dd>
+                                <dt>Especialidade</dt>
+                                <dd>@Html.DisplayFor(model => model.Medico.Especialidade)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Dados da Consulta</h6>
+                            <dl>
+                                <dt>@Html.DisplayNameFor(model => model.DataConsulta)</dt>
+                                <dd>@Html.DisplayFor(model => model.DataConsulta)</dd>
+                                <dt>@Html.DisplayNameFor(model => model.Valor)</dt>
+                                <dd>@Html.DisplayFor(model => model.Valor)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Observações</h6>
+                            <div class="border rounded p-2 bg-light">
+                                @if (!string.IsNullOrEmpty(Model.Observacoes))
+                                {
+                                    @Html.DisplayFor(model => model.Observacoes)
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Nenhuma observação registrada</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar à Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadgeClass(TrabalhoMVC.Models.StatusConsulta status)
+    {
+        return status switch
+        {
+            TrabalhoMVC.Models.StatusConsulta.Agendada => "bg-primary",
+            TrabalhoMVC.Models.StatusConsulta.Confirmada => "bg-info",
+            TrabalhoMVC.Models.StatusConsulta.Realizada => "bg-success",
+            TrabalhoMVC.Models.StatusConsulta.Cancelada => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

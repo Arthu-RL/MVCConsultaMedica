@@ -1,6 +1,41 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Política de Privacidade";
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2>Política de Privacidade do Sistema de Consultas Médicas</h2>
+            <p class="lead">Última atualização: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+
+            <h3>1. Coleta de Dados</h3>
+            <p>Coletamos apenas as informações necessárias para o funcionamento do sistema de gestão de consultas médicas:</p>
+            <ul>
+                <li>Dados de pacientes (nome, CPF, data de nascimento e telefone)</li>
+                <li>Dados de médicos (nome, CPF, CRM, especialidade e telefone)</li>
+                <li>Dados de consultas médicas (data, valor, observações)</li>
+            </ul>
+
+            <h3>2. Uso de Dados</h3>
+            <p>Os dados coletados são utilizados exclusivamente para:</p>
+            <ul>
+                <li>Gerenciamento de consultas médicas</li>
+                <li>Geração de relatórios e estatísticas internas</li>
+                <li>Comunicação com pacientes e médicos</li>
+            </ul>
+
+            <h3>3. Armazenamento e Segurança</h3>
+            <p>Todos os dados são armazenados de forma segura em nosso banco de dados, seguindo as melhores práticas de segurança da informação.</p>
+
+            <h3>4. Compartilhamento de Dados</h3>
+            <p>Não compartilhamos dados pessoais com terceiros, exceto quando exigido por lei.</p>
+
+            <h3>5. Seus Direitos</h3>
+            <p>Você tem o direito de acessar, corrigir ou excluir seus dados a qualquer momento, entrando em contato com nossa equipe de suporte.</p>
+
+            <h3>6. Contato</h3>
+            <p>Para questões relacionadas à privacidade, entre em contato pelo e-mail: privacidade@sistema-consultas.com.br</p>
+        </div>
+    </div>
+</div> 

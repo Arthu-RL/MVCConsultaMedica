@@ -1,0 +1,144 @@
+﻿@model TrabalhoMVC.Models.Medico
+
+@{
+    ViewData["Title"] = "Detalhes do Médico";
+}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="bi bi-person-badge"></i> Detalhes do Médico</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h5 class="text-primary">Informações Pessoais</h5>
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Nome)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Nome)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.CPF)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.CPF)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.CRM)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.CRM)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Especialidade)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Especialidade)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Telefone)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Telefone)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Ativo)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Ativo)
+                        {
+                            <span class="badge bg-success">Ativo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inativo</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="col-md-6">
+                <h5 class="text-primary">Resumo de Consultas</h5>
+                @if (Model.Consultas != null && Model.Consultas.Any())
+                {
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Total de consultas</div>
+                        <div class="col-6 text-end">@Model.Consultas.Count</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Consultas realizadas</div>
+                        <div class="col-6 text-end">@Model.Consultas.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Realizada)</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Consultas agendadas</div>
+                        <div class="col-6 text-end">@Model.Consultas.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Agendada || c.Status == TrabalhoMVC.Models.StatusConsulta.Confirmada)</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Consultas canceladas</div>
+                        <div class="col-6 text-end">@Model.Consultas.Count(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Cancelada)</div>
+                    </div>
+                    <hr />
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Valor médio</div>
+                        <div class="col-6 text-end">
+                            @{
+                                var consultasRealizadas = Model.Consultas.Where(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Realizada);
+                                if (consultasRealizadas.Any())
+                                {
+                                    var valorMedio = consultasRealizadas.Average(c => c.Valor);
+                                    @valorMedio.ToString("C")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6 text-start fw-bold">Próxima consulta</div>
+                        <div class="col-6 text-end">
+                            @{
+                                var proximaConsulta = Model.Consultas
+                                .Where(c => c.Status == TrabalhoMVC.Models.StatusConsulta.Agendada || c.Status == TrabalhoMVC.Models.StatusConsulta.Confirmada)
+                                .Where(c => c.DataConsulta >= DateTime.Now)
+                                .OrderBy(c => c.DataConsulta)
+                                .FirstOrDefault();
+
+                                if (proximaConsulta != null)
+                                {
+                                    @proximaConsulta.DataConsulta.ToString("dd/MM/yyyy HH:mm")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Nenhuma</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Este médico ainda não possui consultas registradas.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group" role="group">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <a asp-action="AgendaMedico" asp-route-id="@Model.Id" class="btn btn-info text-white">
+                <i class="bi bi-calendar-check"></i> Agenda do Médico
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar à Lista
+            </a>
+        </div>
+    </div>
+</div>
