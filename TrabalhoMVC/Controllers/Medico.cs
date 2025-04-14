@@ -17,13 +17,11 @@ namespace TrabalhoMVC.Controllers
             _context = context;
         }
 
-        // GET: Medico
         public async Task<IActionResult> Index()
         {
             return View(await _context.Medicos.ToListAsync());
         }
 
-        // GET: Medico/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,13 +42,11 @@ namespace TrabalhoMVC.Controllers
             return View(medico);
         }
 
-        // GET: Medico/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Medico/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,CPF,Telefone,CRM,Especialidade,Ativo")] Medico medico)
@@ -73,7 +69,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Medico/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,7 +84,6 @@ namespace TrabalhoMVC.Controllers
             return View(medico);
         }
 
-        // POST: Medico/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,Telefone,CRM,Especialidade,Ativo")] Medico medico)
@@ -132,7 +126,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Medico/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,7 +143,6 @@ namespace TrabalhoMVC.Controllers
             return View(medico);
         }
 
-        // POST: Medico/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -170,7 +162,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Medico/AgendaMedico/5
         public IActionResult AgendaMedico(int id)
         {
             var medico = _context.Medicos
