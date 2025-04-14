@@ -17,13 +17,11 @@ namespace TrabalhoMVC.Controllers
             _context = context;
         }
 
-        // GET: Paciente
         public async Task<IActionResult> Index()
         {
             return View(await _context.Pacientes.ToListAsync());
         }
 
-        // GET: Paciente/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,13 +42,11 @@ namespace TrabalhoMVC.Controllers
             return View(paciente);
         }
 
-        // GET: Paciente/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Paciente/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,CPF,DataNascimento,Telefone")] Paciente paciente)
@@ -73,7 +69,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Paciente/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,7 +84,6 @@ namespace TrabalhoMVC.Controllers
             return View(paciente);
         }
 
-        // POST: Paciente/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,DataNascimento,Telefone")] Paciente paciente)
@@ -132,7 +126,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Paciente/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,7 +143,6 @@ namespace TrabalhoMVC.Controllers
             return View(paciente);
         }
 
-        // POST: Paciente/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -171,7 +163,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Paciente/HistoricoConsultas/5
         public async Task<IActionResult> HistoricoConsultas(int? id)
         {
             if (id == null)
