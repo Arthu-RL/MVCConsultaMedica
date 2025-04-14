@@ -18,7 +18,6 @@ namespace TrabalhoMVC.Controllers
             _context = context;
         }
 
-        // GET: ConsultaMedica
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -33,7 +32,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultas);
         }
 
-        // GET: ConsultaMedica/Details/5
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
@@ -56,7 +54,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        // GET: ConsultaMedica/Create
         [HttpGet]
         public IActionResult Create()
         {
@@ -79,7 +76,6 @@ namespace TrabalhoMVC.Controllers
             return View(model);
         }
 
-        // POST: ConsultaMedica/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ConsultaMedica consultaMedica)
@@ -104,7 +100,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        // GET: ConsultaMedica/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -131,7 +126,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        // POST: ConsultaMedica/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ConsultaMedica consultaMedica)
@@ -174,7 +168,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        // GET: ConsultaMedica/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -197,7 +190,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        // POST: ConsultaMedica/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -211,7 +203,6 @@ namespace TrabalhoMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: ConsultaMedica/Agenda
         [HttpGet]
         public async Task<IActionResult> Agenda(DateTime? data, int? minimoConsultas)
         {
@@ -273,7 +264,6 @@ namespace TrabalhoMVC.Controllers
         }
     }
 
-    // Classes auxiliares para agrupamento de dados
     public class MedicoEstatisticas
     {
         public int MedicoId { get; set; }
