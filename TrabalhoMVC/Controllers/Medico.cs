@@ -171,35 +171,19 @@ namespace TrabalhoMVC.Controllers
         }
 
         // GET: Medico/AgendaMedico/5
-        public async Task<IActionResult> AgendaMedico(int? id, DateTime? data)
+        public IActionResult AgendaMedico(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // Se não for informada data, considera a data atual
-            data = data ?? DateTime.Today;
-
-            var medico = await _context.Medicos
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var medico = _context.Medicos
+                .Include(m => m.Consultas)
+                    .ThenInclude(c => c.Paciente)
+                .FirstOrDefault(m => m.Id == id);
 
             if (medico == null)
             {
                 return NotFound();
             }
 
-            // Consultas do médico na data informada
-            var consultas = await _context.Consultas
-                .Include(c => c.Paciente)
-                .Where(c => c.MedicoId == id && c.DataConsulta.Date == data.Value.Date)
-                .OrderBy(c => c.DataConsulta)
-                .ToListAsync();
-
-            ViewBag.Medico = medico;
-            ViewBag.Data = data;
-
-            return View(consultas);
+            return View(medico);
         }
 
         private bool MedicoExists(int id)
