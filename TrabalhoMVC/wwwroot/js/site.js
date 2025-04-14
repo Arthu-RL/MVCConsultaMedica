@@ -1,8 +1,5 @@
-﻿// Funções para melhorar a interatividade da interface
-
 // Ativa os tooltips do Bootstrap
 document.addEventListener('DOMContentLoaded', function () {
-  // Inicializa tooltips
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -15,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
   formatCurrencyValues();
 });
 
-// Destaca o item de menu atual com base na URL
 function highlightCurrentNavItem() {
   const currentPath = window.location.pathname;
   const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
@@ -27,7 +23,6 @@ function highlightCurrentNavItem() {
   });
 }
 
-// Formata valores monetários na página
 function formatCurrencyValues() {
   const currencyElements = document.querySelectorAll('.currency-value');
 
@@ -40,14 +35,4 @@ function formatCurrencyValues() {
       });
     }
   });
-}
-
-// Função para imprimir relatório
-function printReport() {
-  window.print();
-}
-
-// Função para navegação entre relatórios
-function navigateToReport(reportName) {
-  window.location.href = `/Relatorios/${reportName}`;
 }
