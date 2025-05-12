@@ -154,7 +154,9 @@ namespace TrabalhoMVC.Controllers
 
                 if (consultas != null)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return View("Delete", medico);
+                    // Pode ser assim, porque ele implicitamente acessa a View com o mesmo nome da action
+                    // return View(medico);
                 }
                 _context.Medicos.Remove(medico);
                 await _context.SaveChangesAsync();

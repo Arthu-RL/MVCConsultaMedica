@@ -154,7 +154,7 @@ namespace TrabalhoMVC.Controllers
 
                 if (consultas != null)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return View(paciente);
                 }
 
                 _context.Pacientes.Remove(paciente);
