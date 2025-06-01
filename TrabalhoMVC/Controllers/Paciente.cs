@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrabalhoMVC.Database;
 using TrabalhoMVC.Models;
+using TrabalhoMVC.Util;
 
 namespace TrabalhoMVC.Controllers
 {
@@ -46,6 +48,52 @@ namespace TrabalhoMVC.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GeneratePatient()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var response = await httpClient.GetAsync("https://randomuser.me/api/?nat=br");
+                    response.EnsureSuccessStatusCode();
+
+                    var jsonString = await response.Content.ReadAsStringAsync();
+
+                    using (JsonDocument doc = JsonDocument.Parse(jsonString))
+                    {
+                        var root = doc.RootElement;
+                        var user = root.GetProperty("results")[0];
+
+                        var nome = $"{user.GetProperty("name").GetProperty("first").GetString()} {user.GetProperty("name").GetProperty("last").GetString()}";
+                        var telefone = user.GetProperty("phone").GetString();
+                        var dataNascimento = user.GetProperty("dob").GetProperty("date").GetDateTime();
+                        var cpf = UserTools.GerarCPF();
+
+                        var paciente = new Paciente
+                        {
+                            Nome = nome,
+                            CPF = cpf,
+                            DataNascimento = dataNascimento,
+                            Telefone = telefone
+                        };
+
+                        _context.Pacientes.Add(paciente);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao gerar paciente: {ex.Message}");
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

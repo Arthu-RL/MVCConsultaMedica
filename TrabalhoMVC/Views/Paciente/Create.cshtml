@@ -54,6 +54,17 @@
     </div>
 </div>
 
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="bi bi-person-gear"></i> Administrador</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="GeneratePatient" method="post">
+            <input type="submit" value="Gerar paciente teste" class="btn btn-success" />
+        </form>
+    </div>
+</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
