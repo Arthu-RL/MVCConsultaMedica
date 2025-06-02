@@ -6,9 +6,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Adiciona a configuraÁ„o da conex„o com o banco de dados
+// Adiciona a configura√ß√£o da conex√£o com o banco de dados
 var connectionString = builder.Configuration.GetConnectionString("SistemaConsultasDB");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
+    { 
+        Title = "Sistema Consultas", 
+        Version = "v1" 
+    });
+    
+    c.DocInclusionPredicate((name, api) => true);
+});
 
 var app = builder.Build();
 
@@ -16,7 +28,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -24,6 +35,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sistema Consultas v1");
+    c.RoutePrefix = "swagger"; // Acesso via /swagger
+});
 
 app.MapControllerRoute(
     name: "default",
