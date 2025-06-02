@@ -108,20 +108,101 @@ namespace TrabalhoMVC.Controllers
                 return NotFound();
             }
 
-            var consultaMedica = await (from c in _context.Consultas where c.Id == id select c).FirstOrDefaultAsync();
+            var consultaMedica = await _context.Consultas
+                .Include(c => c.Sintomas)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            
             if (consultaMedica == null)
             {
                 return NotFound();
             }
 
-            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
-            var medicos = (from m in _context.Medicos orderby m.Nome select m).ToList();
-            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
-                                 select s).ToList();
+            var pacientes = _context.Pacientes.OrderBy(p => p.Nome).ToList();
+            var medicos = _context.Medicos.OrderBy(m => m.Nome).ToList();
+            var statusOptions = Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>().ToList();
+            var todosSintomas = await _context.Sintomas.OrderBy(s => s.Nome).ToListAsync();
 
             ViewBag.PacienteList = pacientes;
             ViewBag.MedicoList = medicos;
             ViewBag.StatusList = statusOptions;
+            ViewBag.TodosSintomas = todosSintomas;
+
+            return View(consultaMedica);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ConsultaMedica consultaMedica, List<int> sintomasIds)
+        {
+            if (id != consultaMedica.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Buscar a consulta com sintomas
+                    var consultaExistente = await _context.Consultas
+                        .Include(c => c.Sintomas)
+                        .FirstOrDefaultAsync(c => c.Id == id);
+
+                    if (consultaExistente == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Atualizar propriedades básicas
+                    consultaExistente.PacienteId = consultaMedica.PacienteId;
+                    consultaExistente.MedicoId = consultaMedica.MedicoId;
+                    consultaExistente.DataConsulta = consultaMedica.DataConsulta;
+                    consultaExistente.Status = consultaMedica.Status;
+                    consultaExistente.Valor = consultaMedica.Valor;
+                    consultaExistente.Observacoes = consultaMedica.Observacoes;
+
+                    // Limpar sintomas existentes
+                    consultaExistente.Sintomas.Clear();
+
+                    // Adicionar novos sintomas
+                    if (sintomasIds != null && sintomasIds.Any())
+                    {
+                        var sintomas = await _context.Sintomas
+                            .Where(s => sintomasIds.Contains(s.Id))
+                            .ToListAsync();
+                        
+                        foreach (var sintoma in sintomas)
+                        {
+                            consultaExistente.Sintomas.Add(sintoma);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ConsultaMedicaExists(consultaMedica.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Recarregar dados se houver erro
+            var pacientes = _context.Pacientes.OrderBy(p => p.Nome).ToList();
+            var medicos = _context.Medicos.OrderBy(m => m.Nome).ToList();
+            var statusOptions = Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>().ToList();
+            var todosSintomas = await _context.Sintomas.OrderBy(s => s.Nome).ToListAsync();
+
+            ViewBag.PacienteList = pacientes;
+            ViewBag.MedicoList = medicos;
+            ViewBag.StatusList = statusOptions;
+            ViewBag.TodosSintomas = todosSintomas;
 
             return View(consultaMedica);
         }

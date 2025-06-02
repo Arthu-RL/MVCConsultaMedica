@@ -16,8 +16,27 @@ namespace TrabalhoMVC.Database
             // Verifica se o banco já tem dados
             if (context.Pacientes.Any() || context.Medicos.Any())
             {
-                return; // O banco já foi inicializado
+                return;
             }
+
+            var sintomas = new Sintoma[] {
+                new Sintoma { Nome = "Dor de cabeça" },
+                new Sintoma { Nome = "Febre" },
+                new Sintoma { Nome = "Tosse" },
+                new Sintoma { Nome = "Dor abdominal" },
+                new Sintoma { Nome = "Náusea" },
+                new Sintoma { Nome = "Dor no peito" },
+                new Sintoma { Nome = "Falta de ar" },
+                new Sintoma { Nome = "Tontura" },
+                new Sintoma { Nome = "Dor nas costas" },
+                new Sintoma { Nome = "Dor no joelho" }
+            };
+
+            foreach (Sintoma sintoma in sintomas)
+            {
+                context.Sintomas.Add(sintoma);
+            }
+            context.SaveChanges();
 
             // Dados mockados - Pacientes
             var pacientes = new Paciente[] {
@@ -198,6 +217,47 @@ namespace TrabalhoMVC.Database
             {
                 context.Consultas.Add(consulta);
             }
+            context.SaveChanges();
+
+            // Relacionar sintomas com consultas (Relacionamento Muitos para Muitos)
+            var consultasSalvas = context.Consultas.ToList();
+            var sintomasSalvos = context.Sintomas.ToList();
+
+            // Consulta 1 (Ana Silva - Cardiologia): Dor no peito, Falta de ar
+            consultasSalvas[0].Sintomas = new List<Sintoma>
+            {
+                sintomasSalvos.First(s => s.Nome == "Dor no peito"),
+                sintomasSalvos.First(s => s.Nome == "Falta de ar")
+            };
+
+            // Consulta 2 (Ana Silva - Dermatologia): sem sintomas específicos relatados
+            
+            // Consulta 3 (Carlos - Cardiologia): Dor de cabeça, Tontura
+            consultasSalvas[2].Sintomas = new List<Sintoma>
+            {
+                sintomasSalvos.First(s => s.Nome == "Dor de cabeça"),
+                sintomasSalvos.First(s => s.Nome == "Tontura")
+            };
+
+            // Consulta 4 (Mariana - Ortopedia): Dor no joelho
+            consultasSalvas[3].Sintomas = new List<Sintoma>
+            {
+                sintomasSalvos.First(s => s.Nome == "Dor no joelho")
+            };
+
+            // Consulta 9 (Juliana - Neurologia): Dor de cabeça, Náusea
+            consultasSalvas[8].Sintomas = new List<Sintoma>
+            {
+                sintomasSalvos.First(s => s.Nome == "Dor de cabeça"),
+                sintomasSalvos.First(s => s.Nome == "Náusea")
+            };
+
+            // Consulta 10 (Paulo - Ortopedia): Dor nas costas
+            consultasSalvas[9].Sintomas = new List<Sintoma>
+            {
+                sintomasSalvos.First(s => s.Nome == "Dor nas costas")
+            };
+
             context.SaveChanges();
         }
     }

@@ -13,6 +13,7 @@ namespace TrabalhoMVC.Database
         public DbSet<Paciente> Pacientes { get; set; }
         public DbSet<Medico> Medicos { get; set; }
         public DbSet<ConsultaMedica> Consultas { get; set; }
+        public DbSet<Sintoma> Sintomas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +22,7 @@ namespace TrabalhoMVC.Database
             modelBuilder.Entity<Paciente>().ToTable("Pacientes");
             modelBuilder.Entity<Medico>().ToTable("Medicos");
             modelBuilder.Entity<ConsultaMedica>().ToTable("Consultas");
+            modelBuilder.Entity<Sintoma>().ToTable("Sintomas");
         }
     }
 }

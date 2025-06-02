@@ -5,6 +5,7 @@
     var pacientes = ViewBag.PacienteList as List<TrabalhoMVC.Models.Paciente>;
     var medicos = ViewBag.MedicoList as List<TrabalhoMVC.Models.Medico>;
     var statusList = ViewBag.StatusList as List<TrabalhoMVC.Models.StatusConsulta>;
+    var todosSintomas = ViewBag.TodosSintomas as List<TrabalhoMVC.Models.Sintoma>;
 }
 
 <div class="container">
@@ -84,6 +85,43 @@
                                     <label asp-for="Valor" class="control-label">Valor (R$)</label>
                                     <input asp-for="Valor" class="form-control" type="number" min="0" step="0.01" />
                                     <span asp-validation-for="Valor" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">📋 Sintomas Relatados</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (todosSintomas != null && todosSintomas.Any())
+                                        {
+                                            <div class="row">
+                                                @foreach (var sintoma in todosSintomas)
+                                                {
+                                                    <div class="col-md-4 mb-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" 
+                                                                   type="checkbox" 
+                                                                   name="sintomasIds" 
+                                                                   value="@sintoma.Id" 
+                                                                   id="sintoma_@sintoma.Id"
+                                                                   @(Model.Sintomas?.Any(s => s.Id == sintoma.Id) == true ? "checked" : "") />
+                                                            <label class="form-check-label" for="sintoma_@sintoma.Id">
+                                                                @sintoma.Nome
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted">Nenhum sintoma cadastrado.</p>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>

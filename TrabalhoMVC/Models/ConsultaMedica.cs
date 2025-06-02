@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
@@ -39,5 +40,8 @@ namespace TrabalhoMVC.Models
         // Propriedades de navegação
         public virtual Paciente? Paciente { get; set; }
         public virtual Medico? Medico { get; set; }
+
+        // Relacionamento muitos para muitos com sintomas
+        public virtual ICollection<Sintoma> Sintomas { get; set; } = new List<Sintoma>();
     }
 }
