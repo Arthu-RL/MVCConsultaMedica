@@ -207,48 +207,6 @@ namespace TrabalhoMVC.Controllers
             return View(consultaMedica);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ConsultaMedica consultaMedica)
-        {
-            if (id != consultaMedica.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(consultaMedica);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ConsultaMedicaExists(consultaMedica.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            var pacientes = (from p in _context.Pacientes orderby p.Nome select p).ToList();
-            var medicos = (from m in _context.Medicos orderby m.Nome select m).ToList();
-            var statusOptions = (from s in Enum.GetValues(typeof(StatusConsulta)).Cast<StatusConsulta>()
-                                 select s).ToList();
-
-            ViewBag.PacienteList = pacientes;
-            ViewBag.MedicoList = medicos;
-            ViewBag.StatusList = statusOptions;
-
-            return View(consultaMedica);
-        }
-
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
